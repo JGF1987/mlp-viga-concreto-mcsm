@@ -83,9 +83,9 @@ p_auth.alignment = WD_ALIGN_PARAGRAPH.LEFT
 p_auth.paragraph_format.space_before = Pt(6)
 p_auth.paragraph_format.space_after  = Pt(2)
 autores = [
-    ("Jordana [Sobrenome]",   "jordana.funai@gmail.com",  "1"),
-    ("Maria Luiz [Sobrenome]","[e-mail]",                 "1"),
-    ("Rayre [Sobrenome]",     "[e-mail]",                 "1"),
+    ("Maria Luiza Almeida Xavier", "maria.luiza.a.xavier@gmail.com", "1"),
+    ("Jordana Gabriela Fernandes", "jordana.funai@gmail.com",        "1"),
+    ("Rayre Janaína Vieira Silva", "rayrejanaina2@gmail.com",   "1"),
 ]
 for nome, email, num in autores:
     r = p_auth.add_run(f"{nome}")
@@ -96,7 +96,7 @@ for nome, email, num in autores:
 p_aff = doc.add_paragraph()
 p_aff.alignment = WD_ALIGN_PARAGRAPH.LEFT
 r = p_aff.add_run(
-    "¹Programa de Pós-Graduação em Modelagem Computacional e Sistemas, "
+    "¹Universidade Estadual de Montes Claros, "
     "UNIMONTES — Montes Claros, MG, Brasil"
 )
 set_font(r, size=11)
