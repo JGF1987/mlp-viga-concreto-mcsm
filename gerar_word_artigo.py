@@ -329,41 +329,14 @@ for m in metricas:
     run = p.add_run(m)
     set_font(run, bold=True if "R²" in m else False)
 
-def figura(doc, caminho, legenda, largura_cm=13):
-    """Insere imagem centralizada com legenda."""
-    import os
-    if not os.path.exists(caminho):
-        body(doc, f"[Figura não encontrada: {caminho}]")
-        return
-    p_img = doc.add_paragraph()
-    p_img.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_img.paragraph_format.space_before = Pt(6)
-    run_img = p_img.add_run()
-    run_img.add_picture(caminho, width=Cm(largura_cm))
-    p_leg = doc.add_paragraph()
-    p_leg.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_leg.paragraph_format.space_after = Pt(10)
-    r_leg = p_leg.add_run(legenda)
-    set_font(r_leg, size=10, italic=True)
-
-figura(doc,
-    PASTA + r"\fig1_curva_treinamento.png",
-    "Figura 1 — Curva de perda (MSE normalizado) ao longo das 1.000 épocas de treinamento.")
-
-figura(doc,
-    PASTA + r"\fig2_real_vs_previsto.png",
-    "Figura 2 — Diagrama real vs. previsto: MLP (R² = 0,9998) comparado à Regressão Linear.",
-    largura_cm=15)
-
-figura(doc,
-    PASTA + r"\fig3_sensibilidade.png",
-    "Figura 3 — Análise de sensibilidade: influência individual de fc, ρ e d sobre P.",
-    largura_cm=15)
-
-figura(doc,
-    PASTA + r"\fig4_superficie_3d.png",
-    "Figura 4 — Superfície 3D: P = f(fc, d) — MLP vs. modelo analítico (ρ fixo na média).",
-    largura_cm=15)
+body(doc,
+    "[INSERIR Figura 1 — Curva de treinamento (p4_curva_treinamento.png)]", indent=True)
+body(doc,
+    "[INSERIR Figura 2 — Real vs. Previsto (p4_real_vs_previsto.png)]", indent=True)
+body(doc,
+    "[INSERIR Figura 3 — Análise de sensibilidade por variável]", indent=True)
+body(doc,
+    "[INSERIR Figura 4 — Superfície 3D: P = f(fc, d)]", indent=True)
 
 body(doc,
     "A aderência à linha de identidade na Fig. 2 confirma que a MLP aprendeu a relação "
@@ -410,7 +383,7 @@ p_ack = doc.add_paragraph()
 p_ack.paragraph_format.space_before = Pt(12)
 r1 = p_ack.add_run("Agradecimentos. ")
 set_font(r1, bold=True, italic=True)
-r2 = p_ack.add_run("Os autores agradecem à FAPEMIG (grant n OET-00243-26).")
+r2 = p_ack.add_run("Os autores agradecem ao professor Marcos e à Unimontes.")
 set_font(r2, italic=True)
 
 
@@ -462,11 +435,8 @@ for autor, titulo, resto in refs:
     set_font(r_r, size=11)
 
 
-# ═══════════════════════════════════════════════════════════════
-# DISPONIBILIDADE DO CÓDIGO (GitHub)
-# ═══════════════════════════════════════════════════════════════
+# ── Disponibilidade do código ─────────────────────────────────
 heading(doc, "DISPONIBILIDADE DO CÓDIGO")
-
 p_gh = doc.add_paragraph()
 p_gh.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
 p_gh.paragraph_format.first_line_indent = Cm(0.75)
@@ -475,51 +445,14 @@ r_gh1 = p_gh.add_run(
     "visualizações e script de geração deste documento — estão disponíveis publicamente em: "
 )
 set_font(r_gh1)
-r_gh2 = p_gh.add_run(
-    "https://github.com/[usuario]/mlp-viga-concreto-mcsm"
-)
+r_gh2 = p_gh.add_run("https://github.com/JGF1987/mlp-viga-concreto-mcsm")
 set_font(r_gh2, bold=True, color=(0, 70, 160))
 r_gh3 = p_gh.add_run(
-    ". O repositório contém os arquivos "
-    "problema4_mlp.py, visualizacoes_p4.py e gerar_word_artigo.py, "
-    "além das figuras em alta resolução e o arquivo LaTeX do artigo."
+    ". O repositório contém os arquivos problema4_mlp.py, visualizacoes_p4.py "
+    "e gerar_word_artigo.py, as figuras de análise em alta resolução (pasta figuras/) "
+    "e o arquivo LaTeX do artigo."
 )
 set_font(r_gh3)
-
-
-# ═══════════════════════════════════════════════════════════════
-# APÊNDICE A — CÓDIGO: TREINAMENTO DA MLP
-# ═══════════════════════════════════════════════════════════════
-doc.add_page_break()
-heading(doc, "APÊNDICE A — CÓDIGO: TREINAMENTO DA MLP (problema4_mlp.py)")
-
-def bloco_codigo(doc, caminho_py):
-    """Lê um .py e insere como bloco de código Courier New 9pt."""
-    with open(caminho_py, encoding='utf-8') as f:
-        linhas = f.readlines()
-    for linha in linhas:
-        p = doc.add_paragraph()
-        p.paragraph_format.space_before = Pt(0)
-        p.paragraph_format.space_after  = Pt(0)
-        p.paragraph_format.left_indent  = Cm(0.5)
-        run = p.add_run(linha.rstrip('\n'))
-        run.font.name = 'Courier New'
-        run.font.size = Pt(8.5)
-        # comentários em cinza
-        stripped = linha.lstrip()
-        if stripped.startswith('#'):
-            run.font.color.rgb = RGBColor(100, 100, 100)
-
-bloco_codigo(doc, os.path.join(PASTA, "problema4_mlp.py"))
-
-
-# ═══════════════════════════════════════════════════════════════
-# APÊNDICE B — CÓDIGO: VISUALIZAÇÕES
-# ═══════════════════════════════════════════════════════════════
-doc.add_page_break()
-heading(doc, "APÊNDICE B — CÓDIGO: VISUALIZAÇÕES (visualizacoes_p4.py)")
-bloco_codigo(doc, os.path.join(PASTA, "visualizacoes_p4.py"))
-
 
 # ── Salvar ───────────────────────────────────────────────────
 out = os.path.join(PASTA, "artigo_problema4.docx")
